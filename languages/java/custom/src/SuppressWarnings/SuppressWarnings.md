@@ -9,6 +9,7 @@ This query detects all uses of the Java `@SuppressWarnings` annotation in the co
 The `@SuppressWarnings` annotation is used to suppress compiler warnings. While it can be useful in specific situations, overuse of this annotation may hide important warnings that could indicate real issues in the code.
 
 Consider:
+
 - Only using `@SuppressWarnings` when absolutely necessary
 - Documenting why warnings are being suppressed
 - Reviewing suppressed warnings periodically to see if they can be addressed properly

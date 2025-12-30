@@ -10,3 +10,6 @@ models-output.json
 *.testproj
 trap
 
+# Ignore PrintAST output files
+*_PrintAST.bqrs
+*_PrintAST.txt

@@ -1,0 +1,10 @@
+| Machine.java:5:5:5:33 | SuppressWarnings | Usage of @SuppressWarnings annotation detected |
+| Machine.java:9:5:9:34 | SuppressWarnings | Usage of @SuppressWarnings annotation detected |
+| Machine.java:15:5:15:51 | SuppressWarnings | Usage of @SuppressWarnings annotation detected |
+| Machine.java:23:5:23:31 | SuppressWarnings | Usage of @SuppressWarnings annotation detected |
+| Machine.java:31:5:31:31 | SuppressWarnings | Usage of @SuppressWarnings annotation detected |
+| Machine.java:35:5:35:51 | SuppressWarnings | Usage of @SuppressWarnings annotation detected |
+| Machine.java:42:5:42:33 | SuppressWarnings | Usage of @SuppressWarnings annotation detected |
+| Machine.java:48:5:48:25 | SuppressWarnings | Usage of @SuppressWarnings annotation detected |
+| Machine.java:54:5:54:36 | SuppressWarnings | Usage of @SuppressWarnings annotation detected |
+| Machine.java:61:1:61:24 | SuppressWarnings | Usage of @SuppressWarnings annotation detected |

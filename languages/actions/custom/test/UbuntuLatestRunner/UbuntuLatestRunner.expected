@@ -1,0 +1,2 @@
+| .github/workflows/test.yml:10:5:19:2 | Job: test-ubuntu-latest | Usage of ubuntu-latest in runs-on. Consider using a specific Ubuntu version for reproducibility. |
+| .github/workflows/test.yml:50:5:54:47 | Job: deploy-ubuntu-latest | Usage of ubuntu-latest in runs-on. Consider using a specific Ubuntu version for reproducibility. |

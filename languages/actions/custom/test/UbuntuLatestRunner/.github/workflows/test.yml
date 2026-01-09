@@ -1,0 +1,54 @@
+name: Test Ubuntu Latest Detection
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  # This job should be detected - uses ubuntu-latest
+  test-ubuntu-latest:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run tests
+        run: echo "Running tests on ubuntu-latest"
+
+  # This job should NOT be detected - uses specific version ubuntu-22.04
+  test-ubuntu-22:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run tests
+        run: echo "Running tests on ubuntu-22.04"
+
+  # This job should NOT be detected - uses specific version ubuntu-20.04
+  test-ubuntu-20:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run tests
+        run: echo "Running tests on ubuntu-20.04"
+
+  # This job should NOT be detected - uses windows-latest
+  test-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Run tests
+        run: echo "Running tests on windows-latest"
+
+  # This job should be detected - another ubuntu-latest case
+  deploy-ubuntu-latest:
+    runs-on: ubuntu-latest
+    needs: test-ubuntu-latest
+    steps:
+      - name: Deploy
+        run: echo "Deploying on ubuntu-latest"

@@ -28,7 +28,7 @@ predicate isSensitiveFieldName(string fieldName) {
     // Password - anywhere in the field name is usually sensitive
     lower.regexpMatch(".*password.*") or
     // Phone numbers - match when it's the main identifier (not just part of compound names)
-    lower.regexpMatch("^(phone|mobile|telephone)(no|number)?$") or
+    lower.regexpMatch("^(phone|mobile|telephone|tel)(no|num|number)?$") or
     // Login/username - exact matches to avoid SystemLoginName, etc.
     lower.regexpMatch("^(login|user)name$")
   )

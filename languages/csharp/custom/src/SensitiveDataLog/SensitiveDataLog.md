@@ -58,7 +58,10 @@ public class EmployeeService
         logger.LogError($"Password reset failed for user ID: {employee.Id}");
         
         // Safe - uses masked data if absolutely necessary
-        logger.LogDebug($"Contact phone: ***-***-{employee.PhoneNo.Substring(employee.PhoneNo.Length - 4)}");
+        var maskedPhone = employee.PhoneNo != null && employee.PhoneNo.Length >= 4
+            ? "***-***-" + employee.PhoneNo.Substring(employee.PhoneNo.Length - 4)
+            : "***";
+        logger.LogDebug($"Contact phone: {maskedPhone}");
     }
 
     // GOOD: Using structured logging with filtering

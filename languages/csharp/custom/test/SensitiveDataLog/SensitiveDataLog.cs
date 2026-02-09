@@ -193,10 +193,10 @@ namespace SensitiveDataLogTest
         // VULNERABLE: Logging sensitive local variables
         public void VulnerableSensitiveVariables()
         {
-            string userName = "john.doe";
-            string userPassword = "secret123";
-            string userEmail = "john@example.com";
-            string phoneNumber = "555-1234";
+            string userName = "FAKE_USER";
+            string userPassword = "FAKE_PASSWORD";
+            string userEmail = "fake@example.test";
+            string phoneNumber = "000-0000";
 
             // Should be detected - logging sensitive variables
             logger.LogInformation(userName);

@@ -14,19 +14,23 @@ import csharp
 
 /**
  * Holds if the given string matches a pattern for sensitive data field names.
- * Uses more specific patterns to reduce false positives (e.g., excludes FileName, HostName).
+ * Uses specific patterns to reduce false positives (e.g., excludes FileName, HostName).
  */
 bindingset[fieldName]
 predicate isSensitiveFieldName(string fieldName) {
   // Convert to lowercase for case-insensitive matching
   exists(string lower | lower = fieldName.toLowerCase() |
-    // Exact matches or specific patterns for sensitive fields
-    lower.regexpMatch("(full)?name") or
-    lower.regexpMatch("(sur|last|first)name") or
+    // Exact matches for common PII field names (avoid FileName, HostName, etc.)
+    lower.regexpMatch("^(full)?name$") or
+    lower.regexpMatch("^(sur|last|first)name$") or
+    // Email - anywhere in the field name is usually sensitive
     lower.regexpMatch(".*email.*") or
+    // Password - anywhere in the field name is usually sensitive
     lower.regexpMatch(".*password.*") or
-    lower.regexpMatch(".*(phone|mobile|telephone)(no|number)?") or
-    lower.regexpMatch("(login|user)name")
+    // Phone numbers - match when it's the main identifier (not just part of compound names)
+    lower.regexpMatch("^(phone|mobile|telephone)(no|number)?$") or
+    // Login/username - exact matches to avoid SystemLoginName, etc.
+    lower.regexpMatch("^(login|user)name$")
   )
 }
 

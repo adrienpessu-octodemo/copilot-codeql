@@ -118,6 +118,17 @@ namespace SensitiveDataLogTest
         public string Department { get; set; }
     }
 
+    // Model class to test false positive avoidance
+    public class ConfigurationDataModel
+    {
+        public string FileName { get; set; }
+        public string HostName { get; set; }
+        public string DomainName { get; set; }
+        public string ServerName { get; set; }
+        public string DisplayName { get; set; }
+        public int Timeout { get; set; }
+    }
+
     public class LoggingTestClass
     {
         private readonly ILogger logger;
@@ -224,6 +235,17 @@ namespace SensitiveDataLogTest
             logger.LogInformation("Application started");
             logger.LogError("An error occurred");
             logger.LogWarning("Warning message");
+        }
+
+        // SAFE: Logging non-sensitive properties that contain "name" but aren't PII
+        public void SafeNonSensitiveNameFields(ConfigurationDataModel config)
+        {
+            // Should NOT be detected - these are configuration fields, not PII
+            logger.LogInformation($"Config file: {config.FileName}");
+            logger.LogInformation($"Host: {config.HostName}");
+            logger.LogInformation($"Domain: {config.DomainName}");
+            logger.LogInformation($"Server: {config.ServerName}");
+            logger.LogInformation($"Display: {config.DisplayName}");
         }
     }
 }

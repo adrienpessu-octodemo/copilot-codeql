@@ -13,6 +13,33 @@
 import csharp
 
 /**
+ * Holds if the given string matches a pattern for sensitive data field names.
+ * Uses more specific patterns to reduce false positives (e.g., excludes FileName, HostName).
+ */
+bindingset[fieldName]
+predicate isSensitiveFieldName(string fieldName) {
+  // Convert to lowercase for case-insensitive matching
+  exists(string lower | lower = fieldName.toLowerCase() |
+    // Exact matches or specific patterns for sensitive fields
+    lower.regexpMatch("(full)?name") or
+    lower.regexpMatch("(sur|last|first)name") or
+    lower.regexpMatch(".*email.*") or
+    lower.regexpMatch(".*password.*") or
+    lower.regexpMatch(".*(phone|mobile|telephone)(no|number)?") or
+    lower.regexpMatch("(login|user)name")
+  )
+}
+
+/**
+ * Holds if the expression is a sensitive data access (property, field, or variable).
+ */
+predicate isSensitiveAccess(Expr e) {
+  isSensitiveFieldName(e.(PropertyAccess).getTarget().getName()) or
+  isSensitiveFieldName(e.(FieldAccess).getTarget().getName()) or
+  isSensitiveFieldName(e.(VariableAccess).getTarget().getName())
+}
+
+/**
  * A call to a logging method from ILogger or similar logging frameworks.
  */
 class LoggingMethodCall extends MethodCall {
@@ -32,31 +59,19 @@ from LoggingMethodCall logCall, Expr arg
 where
   arg = logCall.getAnArgument() and
   (
-    // Direct property access with sensitive name
-    arg.(PropertyAccess).getTarget().getName().regexpMatch("(?i).*(name|surname|lastname|firstname|email|password|phone|mobile|telephone|loginname).*") or
-    // Field access with sensitive name
-    arg.(FieldAccess).getTarget().getName().regexpMatch("(?i).*(name|surname|lastname|firstname|email|password|phone|mobile|telephone|loginname).*") or
-    // Variable access with sensitive name
-    arg.(VariableAccess).getTarget().getName().regexpMatch("(?i).*(name|surname|lastname|firstname|email|password|phone|mobile|telephone|loginname).*") or
-    // String interpolation containing sensitive property/field/variable access
+    // Direct sensitive data access
+    isSensitiveAccess(arg) or
+    // String interpolation containing sensitive data access
     exists(InterpolatedStringExpr interpolated, Expr insert |
       arg = interpolated and
       insert = interpolated.getAnInsert() and
-      (
-        insert.(PropertyAccess).getTarget().getName().regexpMatch("(?i).*(name|surname|lastname|firstname|email|password|phone|mobile|telephone|loginname).*") or
-        insert.(FieldAccess).getTarget().getName().regexpMatch("(?i).*(name|surname|lastname|firstname|email|password|phone|mobile|telephone|loginname).*") or
-        insert.(VariableAccess).getTarget().getName().regexpMatch("(?i).*(name|surname|lastname|firstname|email|password|phone|mobile|telephone|loginname).*")
-      )
+      isSensitiveAccess(insert)
     ) or
-    // String concatenation containing sensitive property/field/variable access
+    // String concatenation containing sensitive data access
     exists(AddExpr add, Expr operand |
       arg = add and
       operand = add.getAnOperand() and
-      (
-        operand.(PropertyAccess).getTarget().getName().regexpMatch("(?i).*(name|surname|lastname|firstname|email|password|phone|mobile|telephone|loginname).*") or
-        operand.(FieldAccess).getTarget().getName().regexpMatch("(?i).*(name|surname|lastname|firstname|email|password|phone|mobile|telephone|loginname).*") or
-        operand.(VariableAccess).getTarget().getName().regexpMatch("(?i).*(name|surname|lastname|firstname|email|password|phone|mobile|telephone|loginname).*")
-      )
+      isSensitiveAccess(operand)
     ) or
     // String.Format calls with sensitive arguments
     exists(MethodCall formatCall, Expr formatArg |
@@ -65,11 +80,7 @@ where
       formatCall.getTarget().getDeclaringType().getName() = "String" and
       formatCall.getTarget().getDeclaringType().getNamespace().getName() = "System" and
       formatArg = formatCall.getAnArgument() and
-      (
-        formatArg.(PropertyAccess).getTarget().getName().regexpMatch("(?i).*(name|surname|lastname|firstname|email|password|phone|mobile|telephone|loginname).*") or
-        formatArg.(FieldAccess).getTarget().getName().regexpMatch("(?i).*(name|surname|lastname|firstname|email|password|phone|mobile|telephone|loginname).*") or
-        formatArg.(VariableAccess).getTarget().getName().regexpMatch("(?i).*(name|surname|lastname|firstname|email|password|phone|mobile|telephone|loginname).*")
-      )
+      isSensitiveAccess(formatArg)
     )
   )
 select logCall, "Logging call may expose sensitive data"

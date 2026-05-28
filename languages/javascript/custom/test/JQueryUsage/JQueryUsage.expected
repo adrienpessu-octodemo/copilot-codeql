@@ -1,0 +1,5 @@
+| test.js:2:1:2:11 | $(document) | jQuery usage detected. |
+| test.js:3:3:3:13 | $("button") | jQuery usage detected. |
+| test.js:4:5:4:10 | $("p") | jQuery usage detected. |
+| test.js:8:1:8:16 | jQuery(document) | jQuery usage detected. |
+| test.js:9:3:9:15 | jQuery("div") | jQuery usage detected. |

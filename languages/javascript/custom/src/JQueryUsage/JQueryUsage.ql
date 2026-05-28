@@ -10,7 +10,6 @@
  */
 
 import javascript
-import semmle.javascript.dataflow.DataFlow
 
 from DataFlow::CallNode call
 where call.getCalleeName() in ["$", "jQuery"]

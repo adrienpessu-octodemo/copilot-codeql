@@ -19,7 +19,7 @@ class PackageLockJson extends JsonObject {
   }
 }
 
-private JsonValue antvDependencyValue(PackageLockJson lockFile) {
+private JsonString antvDependencyValue(PackageLockJson lockFile) {
   result =
     lockFile
         .getPropValue("packages")
@@ -40,7 +40,7 @@ private JsonValue antvDependencyValue(PackageLockJson lockFile) {
         .getPropValue("version")
 }
 
-from PackageLockJson lockFile, JsonValue dependency, string version
+from PackageLockJson lockFile, JsonString dependency, string version
 where
   dependency = antvDependencyValue(lockFile) and
   version = dependency.getStringValue()

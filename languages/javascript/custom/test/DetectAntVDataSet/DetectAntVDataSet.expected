@@ -1,0 +1,2 @@
+| package-lock.json:12:27:12:34 | "^1.0.1" | Detected @antv/data-set dependency with version ^1.0.1. |
+| package-lock.json:17:18:17:24 | "1.1.0" | Detected @antv/data-set dependency with version 1.1.0. |
